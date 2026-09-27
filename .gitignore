@@ -1,0 +1,16 @@
+﻿build/
+bin/
+.vs/
+*.obj
+*.ilk
+*.iobj
+*.ipdb
+*.pdb
+*.exp
+*.lib
+*.tlog
+*.idb
+*.asi
+*.dll
+*.exe
+*.dmp

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTA SA — Logistics Tycoon</title>
+<style>
+  :root {
+    --bg: #090d16;
+    --card: #131b2e;
+    --card-border: #1e293b;
+    --card-hover: #1c2742;
+    --primary: #38bdf8;
+    --amber: #f59e0b;
+    --purple: #a855f7;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1280px; margin: 0 auto; }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  .brand span { color: var(--primary); }
+  .nav-btns { display: flex; gap: 10px; align-items: center; }
+  .nav-btn {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: #1e293b; border-color: var(--primary); color: var(--primary); }
+  .nav-btn.active { background: rgba(56, 189, 248, 0.15); border-color: var(--primary); color: var(--primary); }
+  .status-pill {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #4ade80;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Companies Grid */
+  .companies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .company-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .company-card:hover { transform: translateY(-2px); }
+  .card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .company-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .company-name { font-size: 1.15rem; font-weight: 800; }
+  .company-hub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .company-balance { font-size: 1.85rem; font-weight: 900; margin: 12px 0 6px; }
+  .company-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 14px;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+  .stat-val { font-size: 0.95rem; font-weight: 800; margin-top: 2px; }
+  .perk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+    margin-top: 10px;
+  }
+
+  /* Assets Grid */
+  .assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .asset-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .asset-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .asset-title { font-size: 1rem; font-weight: 800; }
+  .asset-cost { font-size: 0.85rem; font-weight: 700; color: #94a3b8; }
+  .asset-owner-status {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Table Card */
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .table-responsive { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+  th {
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 16px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+  .driver-cell { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  .driver-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--primary);
+  }
+  .company-pill {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .state-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .state-broken {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    color: #f87171;
+    animation: pulse-sos 1s infinite;
+  }
+  @keyframes pulse-sos { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .bar-bg { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; min-width: 60px; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="brand">
+      <h1>🚛 San Andreas <span>Logistics Tycoon</span></h1>
+    </div>
+    <div class="nav-btns">
+      <a href="/map" class="nav-btn"><span>🗺️</span> Live GPS Radar</a>
+      <a href="/" class="nav-btn"><span>🎮</span> Vehicle Remote</a>
+      <a href="/logistics" class="nav-btn active"><span>🏢</span> Tycoon</a>
+      <div class="status-pill"><div class="pulse-dot"></div> ONLINE</div>
+    </div>
+  </header>
+
+  <!-- Section A: Companies -->
+  <div class="section-title"><span>🏢</span> Corporate Standings</div>
+  <div class="companies-grid" id="companies-container">
+    <!-- Populated via JS -->
+  </div>
+
+  <!-- Section B: Real-Estate Assets -->
+  <div class="section-title"><span>🏛️</span> Real-Estate Asset Portfolio</div>
+  <div class="assets-grid" id="assets-container">
+    <!-- Populated via JS -->
+  </div>
+
+  <!-- Section C: Driver Roster Table -->
+  <div class="section-title"><span>🧑‍✈️</span> Fleet Telemetry & Driver Roster (15 Trucks)</div>
+  <div class="table-card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Driver</th>
+            <th>Company</th>
+            <th>Truck ID</th>
+            <th>Status</th>
+            <th>Fuel</th>
+            <th>Fatigue</th>
+            <th>Cargo</th>
+            <th>Deliveries</th>
+            <th>Driver Wallet</th>
+          </tr>
+        </thead>
+        <tbody id="drivers-tbody">
+          <!-- Populated via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+async function refreshDashboard() {
+  try {
+    const res = await fetch('/api/status');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    // 1. Render Companies
+    if (data.companies && Array.isArray(data.companies)) {
+      const compContainer = document.getElementById('companies-container');
+      compContainer.innerHTML = data.companies.map(c => {
+        const hasPerk = c.ownedAssets > 0;
+        return `
+          <div class="company-card" style="border-color:${c.color}33;">
+            <div class="card-top-bar" style="background:${c.color};"></div>
+            <div class="company-header">
+              <div>
+                <div class="company-name" style="color:${c.color};">${c.name}</div>
+                <div class="company-hub">📍 Base Hub: ${c.baseHub}</div>
+              </div>
+              <span class="company-pill" style="background:${c.color}22; color:${c.color}; border:1px solid ${c.color}44;">ID #${c.id}</span>
+            </div>
+            <div class="company-balance">$${Number(c.balance).toLocaleString()}</div>
+            <div class="company-stats">
+              <div>
+                <div class="stat-label">Active Fleet</div>
+                <div class="stat-val">🚚 ${c.truckCount} Trucks</div>
+              </div>
+              <div>
+                <div class="stat-label">Real Estate</div>
+                <div class="stat-val">🏛️ ${c.ownedAssets} Owned</div>
+              </div>
+            </div>
+            ${hasPerk ? `<div class="perk-badge">⚡ +25% Delivery Payout Bonus Active</div>` : `<div style="font-size:0.7rem; color:#64748b; margin-top:10px;">No facilities acquired yet</div>`}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 2. Render Real-Estate Assets
+    if (data.assets && Array.isArray(data.assets)) {
+      const assetContainer = document.getElementById('assets-container');
+      assetContainer.innerHTML = data.assets.map(a => {
+        const isOwned = a.ownerId >= 0;
+        const ownerComp = (data.companies && isOwned) ? data.companies[a.ownerId] : null;
+        return `
+          <div class="asset-card">
+            <div class="asset-head">
+              <div class="asset-title">${a.name}</div>
+              <div class="asset-cost">$${Number(a.cost).toLocaleString()}</div>
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin:6px 0;">⚡ Strategic Perk: Grants +25% bonus on all completed freight deliveries.</div>
+            <div class="asset-owner-status" style="${isOwned && ownerComp ? `background:${ownerComp.color}22; border:1px solid ${ownerComp.color}44; color:${ownerComp.color};` : `background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:#64748b;`}">
+              <span>${isOwned && ownerComp ? `🏢 Owned by ${ownerComp.name}` : `🏛️ Available for Acquisition`}</span>
+              <span>${isOwned ? '✅ Active' : 'Market Open'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 3. Render Drivers Roster
+    if (data.trucks && Array.isArray(data.trucks)) {
+      const tbody = document.getElementById('drivers-tbody');
+      tbody.innerHTML = data.trucks.map(t => {
+        let stateHtml;
+        if (t.state === 'BROKEN_DOWN') {
+          stateHtml = `<span class="state-badge state-broken">⚠️ BROKEN DOWN</span>`;
+        } else if (t.state === 'RESTING') {
+          stateHtml = `<span class="state-badge" style="background:#3b82f622; color:#60a5fa; border:1px solid #3b82f644;">💤 RESTING</span>`;
+        } else if (t.state === 'LOADING') {
+          stateHtml = `<span class="state-badge" style="background:#f9731622; color:#fb923c; border:1px solid #f9731644;">🏭 LOADING</span>`;
+        } else if (t.state === 'UNLOADING') {
+          stateHtml = `<span class="state-badge" style="background:#a855f722; color:#c084fc; border:1px solid #a855f744;">📦 UNLOADING</span>`;
+        } else {
+          stateHtml = `<span class="state-badge" style="background:#22c55e22; color:#4ade80; border:1px solid #22c55e44;">🚛 EN ROUTE</span>`;
+        }
+
+        const fuelColor = t.fuel < 20 ? '#ef4444' : '#22c55e';
+        const fatigueColor = t.fatigue > 75 ? '#ef4444' : (t.fatigue > 40 ? '#f59e0b' : '#38bdf8');
+
+        return `
+          <tr>
+            <td>
+              <div class="driver-cell">
+                <div class="driver-avatar">${(t.driver_name || 'D')[0]}</div>
+                <div>${t.driver_name || 'Driver'}</div>
+              </div>
+            </td>
+            <td>
+              <span class="company-pill" style="background:${t.company_color}22; color:${t.company_color}; border:1px solid ${t.company_color}44;">
+                ${t.company_name || 'Company'}
+              </span>
+            </td>
+            <td><b style="color:#f1f5f9;">#${t.id}</b> <span style="color:#64748b; font-size:0.7rem;">[${t.materialized ? '3D' : 'Sim'}]</span></td>
+            <td>${stateHtml}</td>
+            <td>
+              <div class="progress-wrap">
+                <div class="bar-bg"><div class="bar-fill" style="background:${fuelColor}; width:${Math.min(100, Math.max(0, t.fuel))}%;"></div></div>
+                <span style="font-size:0.75rem; font-weight:700;">${t.fuel}%</span>
+              </div>
+            </td>
+            <td>
+              <div class="progress-wrap">
+                <div class="bar-bg"><div class="bar-fill" style="background:${fatigueColor}; width:${Math.min(100, Math.max(0, t.fatigue))}%;"></div></div>
+                <span style="font-size:0.75rem; font-weight:700;">${t.fatigue}%</span>
+              </div>
+            </td>
+            <td><b style="color:#e2e8f0;">${t.cargo}</b> <span style="color:#94a3b8; font-size:0.75rem;">(${t.cargo_tons}t)</span></td>
+            <td><b>${t.deliveries}</b></td>
+            <td><b style="color:#38bdf8;">$${Number(t.driver_wallet || 0).toLocaleString()}</b></td>
+          </tr>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.error('Error polling dashboard:', err);
+  }
+}
+
+setInterval(refreshDashboard, 500);
+refreshDashboard();
+</script>
+</body>
+</html>

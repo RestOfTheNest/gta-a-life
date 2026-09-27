@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "D:/gtaspscqueue",
+    "command": "\"D:/VISUAL STUDIO/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x86/cl.exe\" /c /I\"D:/gtaspscqueue/src\" /I\"D:/gtaspscqueue/src/imgui\" /I\"D:/gtaspscqueue/src/imgui/backends\" /I\"D:/gtaspscqueue/imgui\" /I\"D:/gtaspscqueue/imgui/backends\" /I\"D:/gtaspscqueue/plugin-sdk/plugin_sa\" /I\"D:/gtaspscqueue/plugin-sdk/plugin_sa/game_sa\" /I\"D:/gtaspscqueue/plugin-sdk/plugin_sa/game_sa/enums\" /I\"D:/gtaspscqueue/plugin-sdk/plugin_sa/game_sa/meta\" /I\"D:/gtaspscqueue/plugin-sdk/plugin_sa/game_sa/rw\" /I\"D:/gtaspscqueue/plugin-sdk/shared\" /I\"D:/gtaspscqueue/plugin-sdk/shared/game\" /I\"D:/gtaspscqueue/plugin-sdk/shared/bass\" /I\"D:/gtaspscqueue/plugin-sdk/shared/comp\" /I\"D:/gtaspscqueue/plugin-sdk/shared/comp/plugins\" /I\"D:/gtaspscqueue/plugin-sdk/shared/dxsdk\" /I\"D:/gtaspscqueue/plugin-sdk/shared/extender\" /I\"D:/gtaspscqueue/plugin-sdk/shared/extensions\" /I\"D:/gtaspscqueue/plugin-sdk/shared/extensions/scripting\" /I\"D:/gtaspscqueue/plugin-sdk/shared/rwd3d9\" /D_WINDLL /D_MBCS /DWIN32 /D_WINDOWS /DNDEBUG /D_CRT_SECURE_NO_WARNINGS /D_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS /DGTASA /DRW /std:c++latest /permissive- /EHsc D:/gtaspscqueue/src/main.cpp",
+    "file": "D:/gtaspscqueue/src/main.cpp"
+  }
+]

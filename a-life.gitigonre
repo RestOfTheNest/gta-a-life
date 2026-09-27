@@ -1,0 +1,44 @@
+# CMake build directories & cache
+build/
+bin/
+out/
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+
+# Visual Studio temporary files & caches
+.vs/
+*.sln.docstates
+*.suo
+*.user
+*.userosscache
+*.sln.ide
+
+# MSVC compiler artifacts & object files
+*.obj
+*.ilk
+*.iobj
+*.ipdb
+*.pdb
+*.exp
+*.lib
+*.tlog
+*.idb
+*.lastbuildstate
+*.log
+
+# Precompiled Headers
+*.pch
+
+# Compiled game binaries & crashdumps
+*.asi
+*.dll
+*.exe
+*.dmp
+
+# OS generated files
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
