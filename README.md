@@ -1,5 +1,5 @@
 
-GTA San Andreas: A-Life & Municipal Simulation Engine (Archived)
+GTA San Andreas: A-Life & Municipal Simulation Engine (Archived)      
 
 A native C++ reverse-engineering experiment built on top of Plugin-SDK for Grand Theft Auto: San Andreas (1.0 US HOODLUM).
 
@@ -55,6 +55,8 @@ Despite the architectural hurdles, several core subsystems were successfully imp
     Faction Clashes: Autonomous firefights between rival gang factions (Ballas vs. Grove Street Families) dynamically responding to regional crime spikes.
 
     Crash Diagnostics (crash_handler.cpp): Structured Exception Handling (SEH) harness designed to log native register states and fault offsets upon unhandled memory access violations.
+    
+To access real-time municipal telemetry, economic triggers, and crisis dispatch controls, run the companion backend service and open http://localhost:8080 (or your configured Cloudflare tunnel) in any web browser.
 
 Building from Source
 Requirements
